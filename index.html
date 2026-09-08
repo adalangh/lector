@@ -244,34 +244,48 @@
     <!-- PESTAÑA 3: LISTA DE SERIALES REGISTRADOS -->
     <section id="panel-list" class="hidden space-y-3">
       <div class="flex items-center justify-between">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Seriales en Memoria Local</h2>
-        <button onclick="vaciarTodoConfirm()" class="text-xs text-rose-400 hover:underline">
-          Vaciar Todo
+        <div>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">Seriales en memoria local</h2>
+          <p class="text-[10px] text-slate-500">Guardados en este dispositivo</p>
+        </div>
+        <button onclick="vaciarTodoConfirm()" class="flex items-center gap-1 text-[11px] font-semibold text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/15 border border-rose-500/20 px-2.5 py-1.5 rounded-lg transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+          Vaciar
         </button>
       </div>
 
       <!-- SINCRONIZACIÓN CON GOOGLE SHEETS -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 space-y-2">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5 shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">🔗 Google Sheets</span>
-          <span id="sync-status-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Sin configurar</span>
+          <span class="flex items-center gap-1.5 text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 001-9.9V9a5 5 0 00-9.9-1A4.5 4.5 0 003 12.5"/>
+            </svg>
+            Google Sheets
+          </span>
+          <span id="sync-status-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 flex items-center gap-1">Sin configurar</span>
         </div>
         <input
           type="url"
           id="sheets-url-input"
-          placeholder="Pega la URL del Web App de Apps Script"
-          class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-[11px] text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+          placeholder="URL del Web App de Apps Script (.../exec)"
+          class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-[11px] text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors"
         />
         <button
           id="btn-sync-sheets"
           onclick="sincronizarConSheets()"
           class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-bold py-2 px-4 rounded-lg text-xs transition-all shadow-md flex items-center justify-center gap-2"
         >
-          <span>☁️ Sincronizar con Google Sheets</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span>Sincronizar con Google Sheets</span>
         </button>
       </div>
 
-      <div id="items-container" class="space-y-1.5 max-h-[60vh] overflow-y-auto"></div>
+      <div id="items-container" class="space-y-2 max-h-[60vh] overflow-y-auto pr-0.5"></div>
     </section>
 
   </main>
@@ -316,8 +330,32 @@
   </nav>
 
   <script>
+    // ============================================================================
+    // ⚙️  CONFIGURACIÓN DEL WEB APP DE GOOGLE SHEETS
+    // ------------------------------------------------------------------------
+    // Pega aquí la URL que termina en ".../exec" que te da Apps Script al
+    // implementar Code.gs (ver instrucciones al inicio de ese archivo).
+    // Cada vez que crees una NUEVA implementación tendrás una URL distinta:
+    // solo tienes que reemplazar el valor de abajo por la nueva.
+    //
+    // Esta URL queda como valor por defecto. Si el usuario pega/edita otra
+    // URL directamente en la app (pestaña "Lista"), esa queda guardada en el
+    // dispositivo y tiene prioridad sobre la de aquí.
+    // ============================================================================
+    const CONFIG = {
+      SHEETS_WEBAPP_URL: '' // Ej: 'https://script.google.com/macros/s/AKfycb.../exec'
+    };
+
     const STORAGE_KEY = 'inventario_html_seriales';
     const SHEETS_URL_KEY = 'inv_sheets_webapp_url';
+
+    // Devuelve la URL activa: la guardada en el dispositivo (si el usuario la
+    // editó desde la app) o, si no hay ninguna, la definida en CONFIG arriba.
+    function obtenerSheetsUrl() {
+      const guardada = (localStorage.getItem(SHEETS_URL_KEY) || '').trim();
+      return guardada || CONFIG.SHEETS_WEBAPP_URL.trim();
+    }
+
     let html5QrCode = null;
     let isProcessing = false;
     let isTorchOn = false;
@@ -408,7 +446,13 @@
 
       const container = document.getElementById('items-container');
       if (items.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">No hay seriales guardados.</p>';
+        container.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-10 text-slate-600">
+            <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h.01M4 10h.01M4 14h.01M4 18h.01M8 6v12M11 6v12M14 6v12M17 6h3v12h-3z"/>
+            </svg>
+            <p class="text-xs">No hay seriales guardados.</p>
+          </div>`;
         actualizarBadgeSync();
         return;
       }
@@ -416,39 +460,70 @@
       container.innerHTML = items.map((it, idx) => {
         if (it.id === editandoItemId) {
           return `
-            <div class="bg-slate-900 border border-indigo-500/60 p-2.5 rounded-xl space-y-2 text-xs">
+            <div class="bg-slate-900 border border-indigo-500/60 p-3 rounded-xl space-y-2.5 text-xs shadow-lg shadow-indigo-950/40">
+              <div class="flex items-center gap-1.5 text-[11px] font-bold text-indigo-400 uppercase tracking-wider">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editando serial
+              </div>
               <div>
                 <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Código</label>
-                <textarea id="edit-serial-${it.id}" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-indigo-500 resize-none">${it.serial}</textarea>
+                <textarea id="edit-serial-${it.id}" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-indigo-500 resize-none">${it.serial}</textarea>
               </div>
               <div>
                 <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Observación / Comentario</label>
-                <input id="edit-obs-${it.id}" type="text" value="${(it.observacion || '').replace(/"/g, '&quot;')}" placeholder="Ej: Sala 102 - Torre A" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+                <input id="edit-obs-${it.id}" type="text" value="${(it.observacion || '').replace(/"/g, '&quot;')}" placeholder="Ej: Sala 102 - Torre A" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
               </div>
-              <div class="flex gap-2 justify-end">
-                <button onclick="cancelarEdicionItem()" class="text-[11px] font-bold px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300">Cancelar</button>
-                <button onclick="guardarEdicionItem('${it.id}')" class="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white">Guardar</button>
+              <p class="text-[10px] text-slate-500 flex items-center gap-1">
+                <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Al guardar, este ítem quedará pendiente y se actualizará en Sheets en la próxima sincronización.
+              </p>
+              <div class="flex gap-2 justify-end pt-0.5">
+                <button onclick="cancelarEdicionItem()" class="text-[11px] font-bold px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors">Cancelar</button>
+                <button onclick="guardarEdicionItem('${it.id}')" class="flex items-center gap-1 text-[11px] font-bold px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Guardar
+                </button>
               </div>
             </div>
           `;
         }
+
+        const estadoPill = it.synced
+          ? `<span title="Sincronizado con Sheets" class="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-1.5 py-0.5">
+               <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+             </span>`
+          : `<span title="Pendiente de sincronizar" class="flex items-center gap-0.5 text-[10px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-full px-1.5 py-0.5">
+               <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4l3 3"/></svg>
+             </span>`;
+
         return `
-        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between items-center text-xs">
-          <div class="overflow-hidden mr-2">
+        <div class="group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl flex items-center gap-2.5 p-2.5 text-xs transition-colors">
+          <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h.01M4 10h.01M4 14h.01M4 18h.01M8 6v12M11 6v12M14 6v12M17 6h3v12h-3z"/>
+            </svg>
+          </div>
+          <div class="overflow-hidden flex-1 min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="font-mono font-bold text-emerald-400 text-sm break-all">${it.serial}</span>
-              <span title="${it.synced ? 'Sincronizado con Sheets' : 'Pendiente de sincronizar'}" class="text-[11px]">${it.synced ? '☁️✅' : '☁️⏳'}</span>
+              <span class="font-mono font-bold text-slate-100 text-sm break-all">${it.serial}</span>
+              ${estadoPill}
             </div>
-            <p class="text-[11px] text-slate-400 truncate">${it.observacion || '<i class="text-slate-600">Sin nota</i>'}</p>
+            <p class="text-[11px] text-slate-400 truncate">${it.observacion || '<span class="text-slate-600 italic">Sin nota</span>'}</p>
             <span class="text-[10px] text-slate-500 font-mono">${it.fecha}</span>
           </div>
-          <div class="flex items-center gap-1 flex-shrink-0">
-            <button onclick="iniciarEdicionItem('${it.id}')" class="text-slate-500 hover:text-indigo-400 p-1.5">
+          <div class="flex items-center gap-0.5 flex-shrink-0">
+            <button onclick="iniciarEdicionItem('${it.id}')" title="Editar" class="text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 p-1.5 rounded-lg transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
               </svg>
             </button>
-            <button onclick="eliminarItem(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5">
+            <button onclick="eliminarItem(${idx})" title="Eliminar" class="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 p-1.5 rounded-lg transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
               </svg>
@@ -524,21 +599,21 @@
     function actualizarBadgeSync() {
       const badge = document.getElementById('sync-status-badge');
       if (!badge) return;
-      const url = localStorage.getItem(SHEETS_URL_KEY);
+      const url = obtenerSheetsUrl();
 
       if (!url) {
-        badge.innerText = 'Sin configurar';
-        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400';
+        badge.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> Sin configurar';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 flex items-center gap-1';
         return;
       }
 
       const pendientes = getDatos().filter(i => !i.synced).length;
       if (pendientes === 0) {
-        badge.innerText = 'Todo sincronizado';
-        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-400';
+        badge.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Todo sincronizado';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-400 flex items-center gap-1';
       } else {
-        badge.innerText = `${pendientes} pendiente(s)`;
-        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950 border border-amber-500/40 text-amber-400';
+        badge.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> ${pendientes} pendiente(s)`;
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950 border border-amber-500/40 text-amber-400 flex items-center gap-1';
       }
     }
 
@@ -2010,8 +2085,7 @@
       const savedObs = localStorage.getItem('inv_html_obs');
       if (savedObs) document.getElementById('obs-input').value = savedObs;
 
-      const savedSheetsUrl = localStorage.getItem(SHEETS_URL_KEY);
-      if (savedSheetsUrl) document.getElementById('sheets-url-input').value = savedSheetsUrl;
+      document.getElementById('sheets-url-input').value = obtenerSheetsUrl();
 
       document.getElementById('select-preproc').value = metodoPreproc;
       document.getElementById('select-decoder').value = libreriaDecoder;
