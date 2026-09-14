@@ -74,16 +74,32 @@
     
     <!-- SECCIÓN CÁMARA GLOBAL -->
     <div id="camera-global-wrapper" class="space-y-2">
-      <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl shadow-sm">
-        <label for="obs-input" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-          Observación fija (Ubicación / Lote)
-        </label>
-        <input 
-          type="text" 
-          id="obs-input" 
-          placeholder="Ej: Sala 102 - Torre A" 
-          class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors"
-        />
+      <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl shadow-sm space-y-2">
+        <div>
+          <label for="tipo-select" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+            Tipo de activo (ELEMENTOS)
+          </label>
+          <select
+            id="tipo-select"
+            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
+          >
+            <option value="HP Mouse And Keyboard Combo">HP Mouse And Keyboard Combo</option>
+            <option value="Teclados">Teclados</option>
+            <option value="Mouse">Mouse</option>
+            <option value="Accesorios">Accesorios</option>
+          </select>
+        </div>
+        <div>
+          <label for="obs-input" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+            Observación fija (Ubicación / Lote)
+          </label>
+          <input 
+            type="text" 
+            id="obs-input" 
+            placeholder="Ej: Sala 102 - Torre A" 
+            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors"
+          />
+        </div>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden p-1 relative shadow-inner min-h-[170px] flex items-center justify-center">
@@ -275,6 +291,53 @@
       <div id="items-container" class="space-y-1.5 max-h-[60vh] overflow-y-auto"></div>
     </section>
 
+    <!-- PESTAÑA 4: INVENTARIO COMPLETO (ADMIN: PRESTAR / DEVOLVER) -->
+    <section id="panel-inventario" class="hidden space-y-3">
+
+      <!-- LOGIN ADMIN -->
+      <div id="inv-login-card" class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">🔐 Acceso administrador</h2>
+        <p class="text-[11px] text-slate-500">Inicia sesión para ver todo el inventario y prestar / devolver activos.</p>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Usuario</label>
+          <input type="text" id="inv-login-usuario" autocomplete="username"
+            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Contraseña</label>
+          <input type="password" id="inv-login-password" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter') loginAdmin();"
+            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+        </div>
+        <p id="inv-login-error" class="hidden text-[11px] text-rose-400"></p>
+        <button id="btn-inv-login" onclick="loginAdmin()"
+          class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-bold py-2 px-4 rounded-lg text-xs transition-all shadow-md">
+          Ingresar
+        </button>
+      </div>
+
+      <!-- PANEL ADMIN (visible tras login) -->
+      <div id="inv-admin-panel" class="hidden space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] text-slate-400">Sesión: <b id="inv-admin-user" class="text-slate-200"></b></span>
+          <div class="flex items-center gap-2">
+            <button onclick="cargarInventarioCompleto()" class="text-[11px] text-indigo-400 hover:underline">🔄 Actualizar</button>
+            <button onclick="logoutAdmin()" class="text-[11px] text-rose-400 hover:underline">Cerrar sesión</button>
+          </div>
+        </div>
+
+        <input
+          type="text"
+          id="inv-filtro-input"
+          placeholder="Buscar por serial, placa, elemento, marca o funcionario..."
+          oninput="renderInventarioLista(this.value)"
+          class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+        />
+
+        <div id="inv-items-container" class="space-y-1.5 max-h-[65vh] overflow-y-auto"></div>
+      </div>
+    </section>
+
   </main>
 
   <!-- MODAL PARA VER EL MICROVISOR EN PANTALLA COMPLETA -->
@@ -313,6 +376,12 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
       </svg>
       Lista (<span id="nav-count">0</span>)
+    </button>
+    <button id="btn-nav-inventario" onclick="switchTab('inventario')" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs">
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H2m5 0h5m0 0V11a1 1 0 011-1h0a1 1 0 011 1v10m-3-15h.01M15 5h.01M9 8h.01M15 8h.01M9 11h.01M15 11h.01"/>
+      </svg>
+      Inventario
     </button>
   </nav>
 
@@ -394,6 +463,7 @@
         items.forEach(it => {
           if (!it.id) { it.id = generarId(); cambiado = true; }
           if (typeof it.synced !== 'boolean') { it.synced = false; cambiado = true; }
+          if (typeof it.tipo !== 'string') { it.tipo = ''; cambiado = true; }
         });
         if (cambiado) localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
         return items;
@@ -433,6 +503,17 @@
             />
           </div>
           <div>
+            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Tipo de activo</label>
+            <select
+              id="edit-tipo-${idx}"
+              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
+            >
+              ${['HP Mouse And Keyboard Combo', 'Teclados', 'Mouse', 'Accesorios'].map(op =>
+                `<option value="${op}" ${it.tipo === op ? 'selected' : ''}>${op}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div>
             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Observación</label>
             <input
               type="text"
@@ -462,6 +543,7 @@
               <span class="font-mono font-bold text-emerald-400 text-sm">${it.serial}</span>
               <span title="${it.synced ? 'Sincronizado con Sheets' : 'Pendiente de sincronizar'}" class="text-[11px]">${it.synced ? '☁️✅' : '☁️⏳'}</span>
             </div>
+            ${it.tipo ? `<span class="inline-block text-[10px] font-bold text-indigo-300 bg-indigo-950 border border-indigo-500/30 rounded px-1.5 py-0.5 mt-0.5">${it.tipo}</span>` : ''}
             <p class="text-[11px] text-slate-400 truncate">${it.observacion || '<i class="text-slate-600">Sin nota</i>'}</p>
             <span class="text-[10px] text-slate-500 font-mono">${it.fecha}</span>
           </div>
@@ -517,8 +599,10 @@
 
       const campoSerial = document.getElementById(`edit-serial-${idx}`);
       const campoObs = document.getElementById(`edit-obs-${idx}`);
+      const campoTipo = document.getElementById(`edit-tipo-${idx}`);
       const nuevoSerial = limpiarSerial(campoSerial ? campoSerial.value : item.serial);
       const nuevaObs = campoObs ? campoObs.value : item.observacion;
+      const nuevoTipo = campoTipo ? campoTipo.value : item.tipo;
 
       if (!nuevoSerial) {
         showToast("El serial no puede quedar vacío", "warn", 2200);
@@ -532,9 +616,10 @@
         return;
       }
 
-      const cambioAlgo = item.serial !== nuevoSerial || (item.observacion || '') !== (nuevaObs || '');
+      const cambioAlgo = item.serial !== nuevoSerial || (item.observacion || '') !== (nuevaObs || '') || (item.tipo || '') !== (nuevoTipo || '');
       item.serial = nuevoSerial;
       item.observacion = nuevaObs;
+      item.tipo = nuevoTipo;
       // El ID no cambia: al re-sincronizar, el Web App de Apps Script hace un
       // UPSERT por ID, así que esta edición sobrescribirá la misma fila en
       // Sheets en vez de crear una nueva. Por eso, si cambió algo, se marca
@@ -603,8 +688,9 @@
 
       try {
         const payload = {
+          action: 'sync',
           items: pendientes.map(i => ({
-            id: i.id, serial: i.serial, observacion: i.observacion || '', fecha: i.fecha
+            id: i.id, serial: i.serial, tipo: i.tipo || '', observacion: i.observacion || '', fecha: i.fecha
           }))
         };
 
@@ -678,10 +764,12 @@
       }
 
       const obs = document.getElementById('obs-input').value;
+      const tipoSelect = document.getElementById('tipo-select');
+      const tipo = tipoSelect ? tipoSelect.value : '';
       const d = new Date();
       const fecha = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      items.unshift({ id: generarId(), serial: limpio, observacion: obs, fecha: fecha, synced: false });
+      items.unshift({ id: generarId(), serial: limpio, tipo: tipo, observacion: obs, fecha: fecha, synced: false });
       guardarDatos(items);
 
       if (!silencio) {
@@ -705,8 +793,8 @@
         return;
       }
 
-      const lineas = items.map(i => `${i.serial}\t${i.observacion || ''}\t${i.fecha}`);
-      const tsvContent = `Serial\tObservación\tFecha\n` + lineas.join('\n');
+      const lineas = items.map(i => `${i.tipo || ''}\t${i.serial}\t${i.observacion || ''}\t${i.fecha}`);
+      const tsvContent = `Elementos\tSerial\tObservación\tFecha\n` + lineas.join('\n');
 
       try {
         await navigator.clipboard.writeText(tsvContent);
@@ -1899,19 +1987,23 @@
       const pScan = document.getElementById('panel-scan');
       const pPhoto = document.getElementById('panel-photo');
       const pList = document.getElementById('panel-list');
+      const pInventario = document.getElementById('panel-inventario');
       const bScan = document.getElementById('btn-nav-scan');
       const bPhoto = document.getElementById('btn-nav-photo');
       const bList = document.getElementById('btn-nav-list');
+      const bInventario = document.getElementById('btn-nav-inventario');
       const modeDesc = document.getElementById('header-mode-desc');
       const laserLine = document.getElementById('laser-line');
 
       pScan.classList.add('hidden');
       pPhoto.classList.add('hidden');
       pList.classList.add('hidden');
+      pInventario.classList.add('hidden');
 
       bScan.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
       bPhoto.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
       bList.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
+      bInventario.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
 
       if (tab === 'scan') {
         camWrapper.classList.remove('hidden');
@@ -1925,6 +2017,13 @@
         bPhoto.className = 'flex-1 flex flex-col items-center py-1 text-indigo-400 font-bold text-xs';
         modeDesc.innerText = "Foto Lote (Multi-Scan 128/39)";
         laserLine.classList.add('hidden');
+      } else if (tab === 'inventario') {
+        camWrapper.classList.add('hidden');
+        pInventario.classList.remove('hidden');
+        bInventario.className = 'flex-1 flex flex-col items-center py-1 text-indigo-400 font-bold text-xs';
+        modeDesc.innerText = "Inventario Completo";
+        laserLine.classList.add('hidden');
+        checkAdminSession();
       } else {
         camWrapper.classList.add('hidden');
         pList.classList.remove('hidden');
@@ -1934,8 +2033,227 @@
       }
     }
 
+    // =========================================================================
+    // --- INVENTARIO COMPLETO: LOGIN ADMIN + PRESTAR / DEVOLVER ---
+    // =========================================================================
+
+    const ADMIN_SESSION_KEY = 'inv_admin_user';
+    let inventarioCompleto = [];   // caché en memoria de la última carga desde Sheets
+    let filaPrestamoAbierta = null; // id del activo con el mini-formulario de préstamo abierto
+
+    function getSheetsUrlActual() {
+      return (localStorage.getItem(SHEETS_URL_KEY) || DEFAULT_SHEETS_URL || '').trim();
+    }
+
+    function checkAdminSession() {
+      const usuario = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      const loginCard = document.getElementById('inv-login-card');
+      const adminPanel = document.getElementById('inv-admin-panel');
+      if (usuario) {
+        loginCard.classList.add('hidden');
+        adminPanel.classList.remove('hidden');
+        document.getElementById('inv-admin-user').innerText = usuario;
+        cargarInventarioCompleto();
+      } else {
+        loginCard.classList.remove('hidden');
+        adminPanel.classList.add('hidden');
+      }
+    }
+
+    async function loginAdmin() {
+      const usuario = document.getElementById('inv-login-usuario').value.trim();
+      const password = document.getElementById('inv-login-password').value;
+      const errorBox = document.getElementById('inv-login-error');
+      errorBox.classList.add('hidden');
+
+      const url = getSheetsUrlActual();
+      if (!url) {
+        errorBox.innerText = 'Primero configura la URL del Web App en la pestaña Lista.';
+        errorBox.classList.remove('hidden');
+        return;
+      }
+      if (!usuario || !password) {
+        errorBox.innerText = 'Ingresa usuario y contraseña.';
+        errorBox.classList.remove('hidden');
+        return;
+      }
+
+      const btn = document.getElementById('btn-inv-login');
+      const original = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = 'Verificando...';
+
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'login', usuario, password })
+        });
+        const data = await resp.json();
+        if (!data || data.ok !== true) throw new Error((data && data.error) || 'Credenciales inválidas');
+
+        sessionStorage.setItem(ADMIN_SESSION_KEY, data.usuario || usuario);
+        document.getElementById('inv-login-password').value = '';
+        checkAdminSession();
+      } catch (err) {
+        errorBox.innerText = err.message;
+        errorBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = original;
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      filaPrestamoAbierta = null;
+      checkAdminSession();
+    }
+
+    async function cargarInventarioCompleto() {
+      const url = getSheetsUrlActual();
+      const container = document.getElementById('inv-items-container');
+      if (!url) {
+        container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">Configura la URL del Web App en la pestaña Lista.</p>';
+        return;
+      }
+      container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">Cargando inventario...</p>';
+      try {
+        const resp = await fetch(`${url}?action=list`);
+        const data = await resp.json();
+        if (!data || data.ok !== true) throw new Error((data && data.error) || 'No se pudo cargar el inventario');
+        inventarioCompleto = data.items || [];
+        renderInventarioLista(document.getElementById('inv-filtro-input').value);
+      } catch (err) {
+        container.innerHTML = `<p class="text-xs text-rose-400 text-center py-6">Error al cargar: ${err.message}</p>`;
+      }
+    }
+
+    function renderInventarioLista(filtro = '') {
+      const container = document.getElementById('inv-items-container');
+      const f = (filtro || '').toLowerCase().trim();
+
+      const items = !f ? inventarioCompleto : inventarioCompleto.filter(it =>
+        [it.elementos, it.marca, it.serial, it.placa, it.nombreFuncionario].some(v => String(v || '').toLowerCase().includes(f))
+      );
+
+      if (items.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">No hay activos para mostrar.</p>';
+        return;
+      }
+
+      container.innerHTML = items.map(it => {
+        const prestado = String(it.estadoPrestamo || '').toLowerCase() === 'prestado';
+        const badgeClase = prestado
+          ? 'bg-amber-950 border border-amber-500/40 text-amber-400'
+          : 'bg-emerald-950 border border-emerald-500/40 text-emerald-400';
+        const badgeTexto = prestado ? 'Prestado' : 'Disponible';
+        const formAbierto = filaPrestamoAbierta === it.id;
+
+        return `
+        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-xs space-y-2">
+          <div class="flex justify-between items-start gap-2">
+            <div class="overflow-hidden">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-bold text-slate-100">${it.elementos || '<i class="text-slate-600">Sin tipo</i>'}</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full ${badgeClase}">${badgeTexto}</span>
+              </div>
+              <p class="text-[11px] text-slate-400">
+                ${it.marca ? `Marca: ${it.marca} · ` : ''}Serial: <span class="font-mono text-emerald-400">${it.serial || '-'}</span>
+                ${it.placa ? ` · Placa: ${it.placa}` : ''}
+              </p>
+              ${it.estado ? `<p class="text-[10px] text-slate-500">Estado físico: ${it.estado}</p>` : ''}
+              ${prestado ? `<p class="text-[11px] text-slate-300 mt-1">👤 ${it.nombreFuncionario || ''} ${it.cargo ? `(${it.cargo})` : ''}${it.cedulaFuncionario ? ` · CC ${it.cedulaFuncionario}` : ''}</p>` : ''}
+            </div>
+          </div>
+
+          ${prestado ? `
+            <button onclick="devolverActivo('${it.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-1.5 rounded-lg text-[11px]">
+              ↩️ Devolver
+            </button>
+          ` : formAbierto ? `
+            <div class="bg-slate-950 border border-slate-700 rounded-lg p-2 space-y-1.5">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Quién recibe (custodio)</p>
+              <input type="text" id="prestamo-nombre-${it.id}" placeholder="Nombre funcionario"
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+              <input type="text" id="prestamo-cedula-${it.id}" placeholder="Cédula funcionario"
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+              <input type="text" id="prestamo-cargo-${it.id}" placeholder="Cargo"
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+              <div class="flex gap-2 pt-0.5">
+                <button onclick="confirmarPrestamo('${it.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-[11px]">
+                  ✓ Confirmar préstamo
+                </button>
+                <button onclick="filaPrestamoAbierta=null; renderInventarioLista(document.getElementById('inv-filtro-input').value)" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-1.5 rounded-lg text-[11px]">
+                  ✕ Cancelar
+                </button>
+              </div>
+            </div>
+          ` : `
+            <button onclick="filaPrestamoAbierta='${it.id}'; renderInventarioLista(document.getElementById('inv-filtro-input').value)" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 rounded-lg text-[11px]">
+              📤 Prestar
+            </button>
+          `}
+        </div>
+      `;
+      }).join('');
+    }
+
+    async function confirmarPrestamo(id) {
+      const nombreFuncionario = document.getElementById(`prestamo-nombre-${id}`).value.trim();
+      const cedulaFuncionario = document.getElementById(`prestamo-cedula-${id}`).value.trim();
+      const cargo = document.getElementById(`prestamo-cargo-${id}`).value.trim();
+
+      if (!nombreFuncionario || !cedulaFuncionario) {
+        showToast('Nombre y cédula del funcionario son obligatorios', 'warn', 2600);
+        return;
+      }
+
+      const url = getSheetsUrlActual();
+      const adminUser = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'prestar', adminUser, id, nombreFuncionario, cedulaFuncionario, cargo })
+        });
+        const data = await resp.json();
+        if (!data || data.ok !== true) throw new Error((data && data.error) || 'No se pudo registrar el préstamo');
+
+        filaPrestamoAbierta = null;
+        showToast('Activo prestado correctamente', 'success', 2000);
+        await cargarInventarioCompleto();
+      } catch (err) {
+        showToast(`Error: ${err.message}`, 'warn', 3200);
+      }
+    }
+
+    async function devolverActivo(id) {
+      if (!confirm('¿Confirmas la devolución de este activo?')) return;
+      const url = getSheetsUrlActual();
+      const adminUser = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'devolver', adminUser, id })
+        });
+        const data = await resp.json();
+        if (!data || data.ok !== true) throw new Error((data && data.error) || 'No se pudo registrar la devolución');
+
+        showToast('Activo devuelto correctamente', 'success', 2000);
+        await cargarInventarioCompleto();
+      } catch (err) {
+        showToast(`Error: ${err.message}`, 'warn', 3200);
+      }
+    }
+
     document.getElementById('obs-input').addEventListener('input', e => {
       localStorage.setItem('inv_html_obs', e.target.value);
+    });
+
+    document.getElementById('tipo-select').addEventListener('change', e => {
+      localStorage.setItem('inv_html_tipo', e.target.value);
     });
 
     document.getElementById('sheets-url-input').addEventListener('change', e => {
@@ -1946,6 +2264,9 @@
     window.addEventListener('DOMContentLoaded', () => {
       const savedObs = localStorage.getItem('inv_html_obs');
       if (savedObs) document.getElementById('obs-input').value = savedObs;
+
+      const savedTipo = localStorage.getItem('inv_html_tipo');
+      if (savedTipo) document.getElementById('tipo-select').value = savedTipo;
 
       // Si el usuario ya guardó/cambió una URL antes, esa manda. Si no,
       // se usa la URL del Web App por defecto (ya embebida en el HTML) y se
