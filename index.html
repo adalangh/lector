@@ -77,16 +77,28 @@
       <div class="bg-white border border-slate-200 p-2.5 rounded-xl shadow-sm space-y-2">
         <div>
           <label for="tipo-activo-input" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-            Tipo de Activo
+            Elementos
           </label>
           <select
             id="tipo-activo-input"
             class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
           >
-            <option value="HP Mouse And Keyboard Combo">HP Mouse And Keyboard Combo</option>
+            <option value="Combo Teclado y Mouse">Combo Teclado y Mouse</option>
             <option value="Teclados">Teclados</option>
             <option value="Mouse">Mouse</option>
             <option value="Accesorios">Accesorios</option>
+          </select>
+        </div>
+        <div>
+          <label for="marca-input" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            Marca
+          </label>
+          <select
+            id="marca-input"
+            class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
+          >
+            <option value="HP">HP</option>
+            <option value="Otras">Otras</option>
           </select>
         </div>
         <div>
@@ -130,13 +142,6 @@
 
     <!-- PESTAÑA 1: MODO CONTINUO -->
     <section id="panel-scan" class="space-y-2.5">
-      <button 
-        onclick="copiarParaSheets()" 
-        class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2"
-      >
-        <span>📋 Copiar Lista para Sheets / Excel</span>
-      </button>
-
       <div class="bg-white border border-slate-200 p-2 rounded-xl flex gap-2">
         <input 
           type="text" 
@@ -276,7 +281,7 @@
           type="url"
           id="sheets-url-input"
           placeholder="Pega la URL del Web App de Apps Script"
-          value="https://script.google.com/macros/s/AKfycbwIlAujfBVtqNX1FZK3SHC2MigO2ZN3LadJ982C4ssWXt7uCRBEO1L0my89NY2uGm21tw/exec"
+          value="https://script.google.com/macros/s/AKfycbyL-nJnSGtwq8TFi-d-9rqP3mjmFPeQE5Fu0kXMUpW8Ll8Nafgr9AOCXO-ThtOdkjxzmg/exec"
           class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-[11px] text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
         />
         <button
@@ -285,6 +290,12 @@
           class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-bold py-2 px-4 rounded-lg text-xs transition-all shadow-md flex items-center justify-center gap-2"
         >
           <span>☁️ Sincronizar con Google Sheets</span>
+        </button>
+        <button
+          onclick="copiarParaSheets()"
+          class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-bold py-2 px-4 rounded-lg text-xs transition-all shadow-md flex items-center justify-center gap-2"
+        >
+          <span>📋 Copiar Lista para Sheets / Excel</span>
         </button>
       </div>
 
@@ -426,6 +437,7 @@
     // queda guardada en localStorage y tiene prioridad sobre esta por defecto.
     const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzukgpZ2TTaKSONpxBzy8-cxfWwhYzDa3nR7TXLM4h9EVwhlQ8je-KZ5EWsmgA0-_Wy/exec';
     const TIPO_ACTIVO_KEY = 'inv_html_tipo_activo';
+    const MARCA_KEY = 'inv_html_marca';
     const ADMIN_SESSION_KEY = 'inv_admin_session'; // sessionStorage: se pierde al cerrar la pestaña
     let editandoIdx = null; // idx del serial que se está editando en la lista (null = ninguno)
 
@@ -540,10 +552,18 @@
             />
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Tipo de Activo</label>
+            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Elementos</label>
             <select id="edit-tipo-${idx}" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-900 focus:outline-none focus:border-indigo-500">
-              ${['HP Mouse And Keyboard Combo', 'Teclados', 'Mouse', 'Accesorios'].map(t =>
+              ${['Combo Teclado y Mouse', 'Teclados', 'Mouse', 'Accesorios'].map(t =>
                 `<option value="${t}" ${it.tipoActivo === t ? 'selected' : ''}>${t}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Marca</label>
+            <select id="edit-marca-${idx}" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-900 focus:outline-none focus:border-indigo-500">
+              ${['HP', 'Otras'].map(m =>
+                `<option value="${m}" ${it.marca === m ? 'selected' : ''}>${m}</option>`
               ).join('')}
             </select>
           </div>
@@ -577,7 +597,10 @@
               <span class="font-mono font-bold text-emerald-600 text-sm">${it.serial}</span>
               <span title="${it.synced ? 'Sincronizado con Sheets' : 'Pendiente de sincronizar'}" class="text-[11px]">${it.synced ? '☁️✅' : '☁️⏳'}</span>
             </div>
-            ${it.tipoActivo ? `<span class="inline-block text-[10px] font-bold bg-indigo-100 border border-indigo-500/40 text-indigo-700 px-1.5 py-0.5 rounded mt-0.5">${it.tipoActivo}</span>` : ''}
+            <div class="flex flex-wrap gap-1 mt-0.5">
+              ${it.tipoActivo ? `<span class="inline-block text-[10px] font-bold bg-indigo-100 border border-indigo-500/40 text-indigo-700 px-1.5 py-0.5 rounded">${it.tipoActivo}</span>` : ''}
+              ${it.marca ? `<span class="inline-block text-[10px] font-bold bg-slate-100 border border-slate-300 text-slate-700 px-1.5 py-0.5 rounded">${it.marca}</span>` : ''}
+            </div>
             <p class="text-[11px] text-slate-500 truncate">${it.observacion || '<i class="text-slate-400">Sin nota</i>'}</p>
             <span class="text-[10px] text-slate-500 font-mono">${it.fecha}</span>
           </div>
@@ -634,9 +657,11 @@
       const campoSerial = document.getElementById(`edit-serial-${idx}`);
       const campoObs = document.getElementById(`edit-obs-${idx}`);
       const campoTipo = document.getElementById(`edit-tipo-${idx}`);
+      const campoMarca = document.getElementById(`edit-marca-${idx}`);
       const nuevoSerial = limpiarSerial(campoSerial ? campoSerial.value : item.serial);
       const nuevaObs = campoObs ? campoObs.value : item.observacion;
       const nuevoTipo = campoTipo ? campoTipo.value : item.tipoActivo;
+      const nuevaMarca = campoMarca ? campoMarca.value : item.marca;
 
       if (!nuevoSerial) {
         showToast("El serial no puede quedar vacío", "warn", 2200);
@@ -650,10 +675,11 @@
         return;
       }
 
-      const cambioAlgo = item.serial !== nuevoSerial || (item.observacion || '') !== (nuevaObs || '') || (item.tipoActivo || '') !== (nuevoTipo || '');
+      const cambioAlgo = item.serial !== nuevoSerial || (item.observacion || '') !== (nuevaObs || '') || (item.tipoActivo || '') !== (nuevoTipo || '') || (item.marca || '') !== (nuevaMarca || '');
       item.serial = nuevoSerial;
       item.observacion = nuevaObs;
       item.tipoActivo = nuevoTipo;
+      item.marca = nuevaMarca;
       // El ID no cambia: al re-sincronizar, el Web App de Apps Script hace un
       // UPSERT por ID, así que esta edición sobrescribirá la misma fila en
       // Sheets en vez de crear una nueva. Por eso, si cambió algo, se marca
@@ -724,7 +750,7 @@
         const payload = {
           action: 'sync',
           items: pendientes.map(i => ({
-            id: i.id, serial: i.serial, tipo: i.tipoActivo || '', observacion: i.observacion || '', fecha: i.fecha
+            id: i.id, serial: i.serial, tipo: i.tipoActivo || '', marca: i.marca || '', observacion: i.observacion || '', fecha: i.fecha
           }))
         };
 
@@ -799,10 +825,11 @@
 
       const obs = document.getElementById('obs-input').value;
       const tipoActivo = document.getElementById('tipo-activo-input').value;
+      const marca = document.getElementById('marca-input').value;
       const d = new Date();
       const fecha = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      items.unshift({ id: generarId(), serial: limpio, tipoActivo: tipoActivo, observacion: obs, fecha: fecha, synced: false });
+      items.unshift({ id: generarId(), serial: limpio, tipoActivo: tipoActivo, marca: marca, observacion: obs, fecha: fecha, synced: false });
       guardarDatos(items);
 
       if (!silencio) {
@@ -2286,6 +2313,10 @@
       localStorage.setItem(TIPO_ACTIVO_KEY, e.target.value);
     });
 
+    document.getElementById('marca-input').addEventListener('change', e => {
+      localStorage.setItem(MARCA_KEY, e.target.value);
+    });
+
     document.getElementById('sheets-url-input').addEventListener('change', e => {
       localStorage.setItem(SHEETS_URL_KEY, e.target.value.trim());
       actualizarBadgeSync();
@@ -2297,6 +2328,9 @@
 
       const savedTipo = localStorage.getItem(TIPO_ACTIVO_KEY);
       if (savedTipo) document.getElementById('tipo-activo-input').value = savedTipo;
+
+      const savedMarca = localStorage.getItem(MARCA_KEY);
+      if (savedMarca) document.getElementById('marca-input').value = savedMarca;
 
       restaurarSesionAdmin();
 
