@@ -53,18 +53,18 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 flex flex-col min-h-screen select-none font-sans">
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen select-none font-sans">
 
   <!-- Toast Flotante -->
   <div id="toast-box" class="fixed top-14 left-0 right-0 z-50 flex flex-col items-center pointer-events-none px-4 max-w-sm mx-auto"></div>
 
   <!-- Barra Superior -->
-  <header class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
+  <header class="bg-white border-b border-slate-200 px-4 py-2.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
     <div>
-      <h1 class="text-xs font-bold uppercase tracking-wider text-slate-200">Inventario TI 2.0</h1>
-      <p class="text-[11px] text-emerald-400 font-semibold" id="header-mode-desc">Modo Continuo (Code 128/39)</p>
+      <h1 class="text-xs font-bold uppercase tracking-wider text-slate-700">Inventario TI 2.0</h1>
+      <p class="text-[11px] text-emerald-600 font-semibold" id="header-mode-desc">Modo Continuo (Code 128/39)</p>
     </div>
-    <span id="badge-total" class="bg-indigo-950 border border-indigo-500/40 text-indigo-300 font-mono text-xs px-2.5 py-1 rounded-full font-bold">
+    <span id="badge-total" class="bg-indigo-100 border border-indigo-500/40 text-indigo-700 font-mono text-xs px-2.5 py-1 rounded-full font-bold">
       0 seriales
     </span>
   </header>
@@ -74,14 +74,14 @@
     
     <!-- SECCIÓN CÁMARA GLOBAL -->
     <div id="camera-global-wrapper" class="space-y-2">
-      <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl shadow-sm space-y-2">
+      <div class="bg-white border border-slate-200 p-2.5 rounded-xl shadow-sm space-y-2">
         <div>
-          <label for="tipo-select" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-            Tipo de activo (ELEMENTOS)
+          <label for="tipo-activo-input" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            Tipo de Activo
           </label>
           <select
-            id="tipo-select"
-            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
+            id="tipo-activo-input"
+            class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
           >
             <option value="HP Mouse And Keyboard Combo">HP Mouse And Keyboard Combo</option>
             <option value="Teclados">Teclados</option>
@@ -90,39 +90,39 @@
           </select>
         </div>
         <div>
-          <label for="obs-input" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-            Observación fija (Ubicación / Lote)
+          <label for="obs-input" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            Observación / Comentario
           </label>
           <input 
             type="text" 
             id="obs-input" 
             placeholder="Ej: Sala 102 - Torre A" 
-            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors"
+            class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
           />
         </div>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden p-1 relative shadow-inner min-h-[170px] flex items-center justify-center">
+      <div class="bg-white border border-slate-200 rounded-xl overflow-hidden p-1 relative shadow-inner min-h-[170px] flex items-center justify-center">
         <div id="reader"></div>
         <div id="laser-line" class="laser-line hidden"></div>
         
         <div id="cam-status" class="p-6 text-center text-xs space-y-3 z-20">
-          <p id="cam-msg" class="text-slate-400 leading-relaxed">Iniciando cámara trasera...</p>
+          <p id="cam-msg" class="text-slate-500 leading-relaxed">Iniciando cámara trasera...</p>
           <button id="btn-permiso" onclick="iniciarCamaraDirecta()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-lg active:scale-95 transition-all">
             📷 Conceder Permiso de Cámara
           </button>
         </div>
       </div>
 
-      <div class="flex items-center justify-between bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl">
+      <div class="flex items-center justify-between bg-white border border-slate-200 px-3 py-1.5 rounded-xl">
         <div id="zoom-container" class="hidden flex items-center gap-1">
-          <span class="text-[10px] font-bold text-slate-400 mr-1 uppercase">Zoom:</span>
+          <span class="text-[10px] font-bold text-slate-500 mr-1 uppercase">Zoom:</span>
           <button id="btn-zoom-1" onclick="aplicarZoom(1)" class="bg-indigo-600 text-white text-xs font-mono font-bold px-2 py-0.5 rounded">1x</button>
-          <button id="btn-zoom-2" onclick="aplicarZoom(2)" class="bg-slate-800 text-slate-300 hover:text-white text-xs font-mono font-bold px-2 py-0.5 rounded">2x</button>
+          <button id="btn-zoom-2" onclick="aplicarZoom(2)" class="bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-mono font-bold px-2 py-0.5 rounded">2x</button>
         </div>
         <div id="zoom-placeholder" class="text-[10px] text-slate-500">Distancia ideal: 15-20 cm</div>
 
-        <button id="btn-torch" onclick="toggleTorch()" class="hidden bg-slate-800 border border-slate-700 text-xs px-2.5 py-1 rounded-lg text-slate-300 active:bg-slate-700 flex items-center gap-1">
+        <button id="btn-torch" onclick="toggleTorch()" class="hidden bg-slate-100 border border-slate-300 text-xs px-2.5 py-1 rounded-lg text-slate-600 active:bg-slate-200 flex items-center gap-1">
           <span>🔦</span> Linterna
         </button>
       </div>
@@ -137,15 +137,15 @@
         <span>📋 Copiar Lista para Sheets / Excel</span>
       </button>
 
-      <div class="bg-slate-900 border border-slate-800 p-2 rounded-xl flex gap-2">
+      <div class="bg-white border border-slate-200 p-2 rounded-xl flex gap-2">
         <input 
           type="text" 
           id="manual-input" 
           placeholder="Entrada manual o pistola..." 
           onkeydown="if(event.key==='Enter') agregarManual();" 
-          class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+          class="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 font-mono placeholder-slate-400 focus:outline-none focus:border-indigo-500"
         />
-        <button onclick="agregarManual()" class="bg-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-700 text-slate-200">
+        <button onclick="agregarManual()" class="bg-slate-100 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700">
           +
         </button>
       </div>
@@ -155,18 +155,18 @@
     <section id="panel-photo" class="hidden space-y-3">
 
       <!-- AJUSTES DE PROCESAMIENTO / LIBRERÍA -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 space-y-2 text-[11px]">
+      <div class="bg-white border border-slate-200 rounded-xl p-2.5 space-y-2 text-[11px]">
         <div class="flex items-center justify-between gap-2">
-          <label for="select-preproc" class="text-slate-400 font-bold uppercase tracking-wider">Preprocesamiento</label>
-          <select id="select-preproc" onchange="cambiarMetodoPreproc(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-slate-200 text-[11px]">
+          <label for="select-preproc" class="text-slate-500 font-bold uppercase tracking-wider">Preprocesamiento</label>
+          <select id="select-preproc" onchange="cambiarMetodoPreproc(this.value)" class="bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-slate-700 text-[11px]">
             <option value="none">Sin preprocesamiento</option>
             <option value="js">Método JS (deskew + Sauvola)</option>
             <option value="opencv" selected>OpenCV.js (CLAHE + adaptativo)</option>
           </select>
         </div>
         <div class="flex items-center justify-between gap-2">
-          <label for="select-decoder" class="text-slate-400 font-bold uppercase tracking-wider">Librería 1D</label>
-          <select id="select-decoder" onchange="cambiarLibreriaDecoder(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-slate-200 text-[11px]">
+          <label for="select-decoder" class="text-slate-500 font-bold uppercase tracking-wider">Librería 1D</label>
+          <select id="select-decoder" onchange="cambiarLibreriaDecoder(this.value)" class="bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-slate-700 text-[11px]">
             <option value="nativo" selected>Nativa (BarcodeDetector + Quagga2)</option>
             <option value="zxing">ZXing (más precisa 128/39)</option>
           </select>
@@ -190,23 +190,23 @@
       </div>
 
       <!-- Tarjeta Amplia de Inspección -->
-      <div id="photo-preview-card" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-3">
+      <div id="photo-preview-card" class="hidden bg-white border border-slate-200 rounded-xl p-3 space-y-3">
         <div class="flex justify-between items-center px-1">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-200">Visor de Lote</span>
-            <button id="btn-toggle-crop" onclick="alternarRecorte()" class="text-[10px] bg-indigo-900/60 border border-indigo-500/40 text-indigo-300 px-2 py-0.5 rounded hover:bg-indigo-800">
+            <span class="text-xs font-bold text-slate-700">Visor de Lote</span>
+            <button id="btn-toggle-crop" onclick="alternarRecorte()" class="text-[10px] bg-indigo-900/60 border border-indigo-500/40 text-indigo-700 px-2 py-0.5 rounded hover:bg-indigo-800">
               ✂️ Vista: Recortada
             </button>
           </div>
-          <button onclick="reanudarCamaraEnVivo()" class="text-xs text-indigo-400 hover:underline flex items-center gap-1">
+          <button onclick="reanudarCamaraEnVivo()" class="text-xs text-indigo-600 hover:underline flex items-center gap-1">
             <span>🔄</span> Repetir foto
           </button>
         </div>
 
         <!-- Canvas Amplio sin recortes restrictivos de altura -->
-        <div class="relative overflow-hidden rounded-xl border border-slate-700 bg-black flex justify-center items-center">
+        <div class="relative overflow-hidden rounded-xl border border-slate-300 bg-black flex justify-center items-center">
           <canvas id="photo-canvas" class="w-full max-h-[60vh] object-contain cursor-crosshair block touch-manipulation"></canvas>
-          <div id="photo-loading-overlay" class="hidden absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center text-xs text-emerald-400 gap-2">
+          <div id="photo-loading-overlay" class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center text-xs text-emerald-600 gap-2">
             <svg class="animate-spin h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
@@ -215,21 +215,21 @@
           </div>
         </div>
 
-        <p class="text-[11px] text-slate-400 text-center">
-          💡 <b class="text-slate-300">Toca un recuadro</b> para quitarlo/marcarlo. <b class="text-slate-300">Toca un código o QR no detectado</b> para forzar su escaneo.
+        <p class="text-[11px] text-slate-500 text-center">
+          💡 <b class="text-slate-600">Toca un recuadro</b> para quitarlo/marcarlo. <b class="text-slate-600">Toca un código o QR no detectado</b> para forzar su escaneo.
         </p>
 
         <!-- MICROVISOR CON BOTÓN DE PANTALLA COMPLETA -->
-        <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-2">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
+            <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
               <span>🔬</span> Microvisor: Imagen Binarizada
             </span>
-            <button onclick="abrirModalMicrovisor()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-indigo-300 px-2 py-0.5 rounded border border-slate-700">
+            <button onclick="abrirModalMicrovisor()" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-indigo-700 px-2 py-0.5 rounded border border-slate-300">
               🔍 Ampliar Pantalla Completa
             </button>
           </div>
-          <div class="overflow-x-auto rounded border border-slate-800 bg-black flex justify-center p-1">
+          <div class="overflow-x-auto rounded border border-slate-200 bg-black flex justify-center p-1">
             <canvas id="micro-canvas" class="h-20 w-auto object-contain block cursor-pointer" onclick="abrirModalMicrovisor()"></canvas>
           </div>
           <div class="flex justify-between items-center text-[9px] text-slate-500">
@@ -246,7 +246,7 @@
           id="btn-confirmar-lote" 
           onclick="importarCodigosSeleccionados()" 
           disabled
-          class="w-full bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2"
+          class="w-full bg-emerald-600 disabled:bg-slate-100 disabled:text-slate-400 hover:bg-emerald-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -260,24 +260,24 @@
     <!-- PESTAÑA 3: LISTA DE SERIALES REGISTRADOS -->
     <section id="panel-list" class="hidden space-y-3">
       <div class="flex items-center justify-between">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Seriales en Memoria Local</h2>
-        <button onclick="vaciarTodoConfirm()" class="text-xs text-rose-400 hover:underline">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Seriales en Memoria Local</h2>
+        <button onclick="vaciarTodoConfirm()" class="text-xs text-rose-600 hover:underline">
           Vaciar Todo
         </button>
       </div>
 
       <!-- SINCRONIZACIÓN CON GOOGLE SHEETS -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 space-y-2">
+      <div class="bg-white border border-slate-200 rounded-xl p-2.5 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">🔗 Google Sheets</span>
-          <span id="sync-status-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Sin configurar</span>
+          <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">🔗 Google Sheets</span>
+          <span id="sync-status-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Sin configurar</span>
         </div>
         <input
           type="url"
           id="sheets-url-input"
           placeholder="Pega la URL del Web App de Apps Script"
           value="https://script.google.com/macros/s/AKfycbzukgpZ2TTaKSONpxBzy8-cxfWwhYzDa3nR7TXLM4h9EVwhlQ8je-KZ5EWsmgA0-_Wy/exec"
-          class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-[11px] text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+          class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-[11px] text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
         />
         <button
           id="btn-sync-sheets"
@@ -291,95 +291,127 @@
       <div id="items-container" class="space-y-1.5 max-h-[60vh] overflow-y-auto"></div>
     </section>
 
-    <!-- PESTAÑA 4: INVENTARIO COMPLETO (ADMIN: PRESTAR / DEVOLVER) -->
-    <section id="panel-inventario" class="hidden space-y-3">
+    <!-- PESTAÑA 4: INVENTARIO COMPLETO (ADMIN) -->
+    <section id="panel-inventory" class="hidden space-y-3">
 
       <!-- LOGIN ADMIN -->
-      <div id="inv-login-card" class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">🔐 Acceso administrador</h2>
-        <p class="text-[11px] text-slate-500">Inicia sesión para ver todo el inventario y prestar / devolver activos.</p>
+      <div id="inventory-login-card" class="bg-white border border-slate-200 p-3 rounded-xl space-y-2">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Acceso de Administrador</h2>
+        <p class="text-[11px] text-slate-500">Inicia sesión para ver y asignar todos los activos del inventario.</p>
         <div>
           <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Usuario</label>
-          <input type="text" id="inv-login-usuario" autocomplete="username"
-            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+          <input type="text" id="admin-user-input" autocomplete="username" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500" />
         </div>
         <div>
           <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Contraseña</label>
-          <input type="password" id="inv-login-password" autocomplete="current-password"
-            onkeydown="if(event.key==='Enter') loginAdmin();"
-            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
+          <input type="password" id="admin-pass-input" autocomplete="current-password" onkeydown="if(event.key==='Enter') loginAdmin();" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500" />
         </div>
-        <p id="inv-login-error" class="hidden text-[11px] text-rose-400"></p>
-        <button id="btn-inv-login" onclick="loginAdmin()"
-          class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-bold py-2 px-4 rounded-lg text-xs transition-all shadow-md">
-          Ingresar
+        <button id="btn-admin-login" onclick="loginAdmin()" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-bold py-2 px-4 rounded-lg text-xs transition-all shadow-md">
+          🔐 Ingresar
         </button>
+        <p id="admin-login-error" class="hidden text-[11px] text-rose-600"></p>
       </div>
 
-      <!-- PANEL ADMIN (visible tras login) -->
-      <div id="inv-admin-panel" class="hidden space-y-2.5">
+      <!-- CONTENIDO DE INVENTARIO (SOLO VISIBLE LOGUEADO) -->
+      <div id="inventory-content" class="hidden space-y-3">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] text-slate-400">Sesión: <b id="inv-admin-user" class="text-slate-200"></b></span>
-          <div class="flex items-center gap-2">
-            <button onclick="cargarInventarioCompleto()" class="text-[11px] text-indigo-400 hover:underline">🔄 Actualizar</button>
-            <button onclick="logoutAdmin()" class="text-[11px] text-rose-400 hover:underline">Cerrar sesión</button>
-          </div>
+          <span class="text-[11px] text-slate-500">Sesión: <b id="admin-user-label" class="text-emerald-600"></b></span>
+          <button onclick="logoutAdmin()" class="text-xs text-rose-600 hover:underline">Cerrar sesión</button>
         </div>
 
-        <input
-          type="text"
-          id="inv-filtro-input"
-          placeholder="Buscar por serial, placa, elemento, marca o funcionario..."
-          oninput="renderInventarioLista(this.value)"
-          class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
-        />
+        <div class="flex gap-2">
+          <input
+            type="text"
+            id="inventory-search-input"
+            placeholder="Buscar por serial, tipo, estado o asignado..."
+            oninput="renderizarInventarioCompleto()"
+            class="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
+          />
+          <button onclick="cargarInventarioCompleto()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+            🔄
+          </button>
+        </div>
 
-        <div id="inv-items-container" class="space-y-1.5 max-h-[65vh] overflow-y-auto"></div>
+        <p id="inventory-status-text" class="text-[11px] text-slate-500 text-center">Toca 🔄 para cargar el inventario.</p>
+
+        <div id="inventory-list-container" class="space-y-1.5 max-h-[65vh] overflow-y-auto"></div>
       </div>
     </section>
 
   </main>
 
+  <!-- MODAL DE ASIGNACIÓN DE ACTIVO -->
+  <div id="modal-asignar" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-3">
+    <div class="bg-white border border-slate-200 rounded-xl p-4 w-full max-w-sm space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold text-slate-900">Asignar Activo</h3>
+        <button onclick="cerrarModalAsignar()" class="text-slate-500 hover:text-slate-900 text-sm">✕</button>
+      </div>
+      <p id="asignar-serial-label" class="text-[11px] font-mono text-emerald-600"></p>
+
+      <div>
+        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Nombre del usuario</label>
+        <input type="text" id="asignar-nombre-input" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Número de identificación</label>
+        <input type="text" id="asignar-identificacion-input" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Rol</label>
+        <input type="text" id="asignar-rol-input" placeholder="Ej: Docente, Estudiante, Funcionario" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Correo electrónico</label>
+        <input type="email" id="asignar-correo-input" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500" />
+      </div>
+
+      <button id="btn-confirmar-asignacion" onclick="confirmarAsignacion()" class="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white font-bold py-2.5 px-4 rounded-lg text-xs transition-all shadow-md">
+        ✓ Asignar
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL PARA VER EL MICROVISOR EN PANTALLA COMPLETA -->
   <div id="modal-microvisor" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md p-4 flex flex-col">
-    <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+    <div class="flex justify-between items-center pb-2 border-b border-slate-200">
       <div>
-        <h3 class="text-sm font-bold text-white">Inspección de Binarización y Perspectiva</h3>
-        <p class="text-[11px] text-slate-400" id="modal-micro-info">Píxeles que procesa el motor decodificador</p>
+        <h3 class="text-sm font-bold text-slate-900">Inspección de Binarización y Perspectiva</h3>
+        <p class="text-[11px] text-slate-500" id="modal-micro-info">Píxeles que procesa el motor decodificador</p>
       </div>
-      <button onclick="cerrarModalMicrovisor()" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold">
+      <button onclick="cerrarModalMicrovisor()" class="bg-slate-100 text-slate-900 px-3 py-1 rounded-lg text-xs font-bold">
         ✕ Cerrar
       </button>
     </div>
     <div class="flex-1 overflow-auto flex items-center justify-center p-2">
-      <canvas id="modal-micro-canvas" class="max-w-none max-h-none border border-slate-700"></canvas>
+      <canvas id="modal-micro-canvas" class="max-w-none max-h-none border border-slate-300"></canvas>
     </div>
   </div>
 
   <!-- NAVEGACIÓN INFERIOR -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 flex justify-around p-2 z-30">
-    <button id="btn-nav-scan" onclick="switchTab('scan')" class="flex-1 flex flex-col items-center py-1 text-indigo-400 font-bold text-xs">
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-2 z-30">
+    <button id="btn-nav-scan" onclick="switchTab('scan')" class="flex-1 flex flex-col items-center py-1 text-indigo-600 font-bold text-xs">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
       </svg>
       Continuo
     </button>
-    <button id="btn-nav-photo" onclick="switchTab('photo')" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs">
+    <button id="btn-nav-photo" onclick="switchTab('photo')" class="flex-1 flex flex-col items-center py-1 text-slate-500 hover:text-slate-700 text-xs">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
       </svg>
       Foto Lote
     </button>
-    <button id="btn-nav-list" onclick="switchTab('list')" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs">
+    <button id="btn-nav-list" onclick="switchTab('list')" class="flex-1 flex flex-col items-center py-1 text-slate-500 hover:text-slate-700 text-xs">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
       </svg>
       Lista (<span id="nav-count">0</span>)
     </button>
-    <button id="btn-nav-inventario" onclick="switchTab('inventario')" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs">
+    <button id="btn-nav-inventory" onclick="switchTab('inventory')" class="flex-1 flex flex-col items-center py-1 text-slate-500 hover:text-slate-700 text-xs">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H2m5 0h5m0 0V11a1 1 0 011-1h0a1 1 0 011 1v10m-3-15h.01M15 5h.01M9 8h.01M15 8h.01M9 11h.01M15 11h.01"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
       </svg>
       Inventario
     </button>
@@ -393,7 +425,13 @@
     // usuario la cambia (por ejemplo para apuntar a otra hoja), esa nueva URL
     // queda guardada en localStorage y tiene prioridad sobre esta por defecto.
     const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzukgpZ2TTaKSONpxBzy8-cxfWwhYzDa3nR7TXLM4h9EVwhlQ8je-KZ5EWsmgA0-_Wy/exec';
+    const TIPO_ACTIVO_KEY = 'inv_html_tipo_activo';
+    const ADMIN_SESSION_KEY = 'inv_admin_session'; // sessionStorage: se pierde al cerrar la pestaña
     let editandoIdx = null; // idx del serial que se está editando en la lista (null = ninguno)
+
+    // Inventario completo cargado desde Sheets (solo visible para admin logueado)
+    let inventarioCompleto = [];
+    let idActivoEnAsignacion = null; // id del activo que se está asignando en el modal
     let html5QrCode = null;
     let isProcessing = false;
     let isTorchOn = false;
@@ -463,7 +501,6 @@
         items.forEach(it => {
           if (!it.id) { it.id = generarId(); cambiado = true; }
           if (typeof it.synced !== 'boolean') { it.synced = false; cambiado = true; }
-          if (typeof it.tipo !== 'string') { it.tipo = ''; cambiado = true; }
         });
         if (cambiado) localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
         return items;
@@ -482,7 +519,7 @@
 
       const container = document.getElementById('items-container');
       if (items.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">No hay seriales guardados.</p>';
+        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">No hay seriales guardados.</p>';
         actualizarBadgeSync();
         return;
       }
@@ -491,7 +528,7 @@
         // Modo edición: reemplaza la fila normal por inputs editables.
         if (idx === editandoIdx) {
           return `
-        <div class="bg-slate-900 border border-indigo-500/60 p-2.5 rounded-xl space-y-2 text-xs">
+        <div class="bg-white border border-indigo-500/60 p-2.5 rounded-xl space-y-2 text-xs">
           <div>
             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Serial</label>
             <input
@@ -499,17 +536,14 @@
               id="edit-serial-${idx}"
               value="${escapeAttr(it.serial)}"
               onkeydown="if(event.key==='Enter') guardarEdicion(${idx}); if(event.key==='Escape') cancelarEdicion();"
-              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500"
+              class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-mono text-emerald-600 focus:outline-none focus:border-indigo-500"
             />
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Tipo de activo</label>
-            <select
-              id="edit-tipo-${idx}"
-              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
-            >
-              ${['HP Mouse And Keyboard Combo', 'Teclados', 'Mouse', 'Accesorios'].map(op =>
-                `<option value="${op}" ${it.tipo === op ? 'selected' : ''}>${op}</option>`
+            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Tipo de Activo</label>
+            <select id="edit-tipo-${idx}" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-900 focus:outline-none focus:border-indigo-500">
+              ${['HP Mouse And Keyboard Combo', 'Teclados', 'Mouse', 'Accesorios'].map(t =>
+                `<option value="${t}" ${it.tipoActivo === t ? 'selected' : ''}>${t}</option>`
               ).join('')}
             </select>
           </div>
@@ -520,14 +554,14 @@
               id="edit-obs-${idx}"
               value="${escapeAttr(it.observacion || '')}"
               onkeydown="if(event.key==='Enter') guardarEdicion(${idx}); if(event.key==='Escape') cancelarEdicion();"
-              class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-[11px] text-white focus:outline-none focus:border-indigo-500"
+              class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-900 focus:outline-none focus:border-indigo-500"
             />
           </div>
           <div class="flex gap-2 pt-0.5">
             <button onclick="guardarEdicion(${idx})" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-[11px]">
               ✓ Guardar
             </button>
-            <button onclick="cancelarEdicion()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-1.5 rounded-lg text-[11px]">
+            <button onclick="cancelarEdicion()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 rounded-lg text-[11px]">
               ✕ Cancelar
             </button>
           </div>
@@ -537,23 +571,23 @@
 
         // Fila normal (modo lectura).
         return `
-        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between items-center text-xs">
+        <div class="bg-white border border-slate-200 p-2.5 rounded-xl flex justify-between items-center text-xs">
           <div class="overflow-hidden mr-2">
             <div class="flex items-center gap-1.5">
-              <span class="font-mono font-bold text-emerald-400 text-sm">${it.serial}</span>
+              <span class="font-mono font-bold text-emerald-600 text-sm">${it.serial}</span>
               <span title="${it.synced ? 'Sincronizado con Sheets' : 'Pendiente de sincronizar'}" class="text-[11px]">${it.synced ? '☁️✅' : '☁️⏳'}</span>
             </div>
-            ${it.tipo ? `<span class="inline-block text-[10px] font-bold text-indigo-300 bg-indigo-950 border border-indigo-500/30 rounded px-1.5 py-0.5 mt-0.5">${it.tipo}</span>` : ''}
-            <p class="text-[11px] text-slate-400 truncate">${it.observacion || '<i class="text-slate-600">Sin nota</i>'}</p>
+            ${it.tipoActivo ? `<span class="inline-block text-[10px] font-bold bg-indigo-100 border border-indigo-500/40 text-indigo-700 px-1.5 py-0.5 rounded mt-0.5">${it.tipoActivo}</span>` : ''}
+            <p class="text-[11px] text-slate-500 truncate">${it.observacion || '<i class="text-slate-400">Sin nota</i>'}</p>
             <span class="text-[10px] text-slate-500 font-mono">${it.fecha}</span>
           </div>
           <div class="flex items-center gap-0.5 flex-shrink-0">
-            <button onclick="iniciarEdicion(${idx})" class="text-slate-500 hover:text-indigo-400 p-1.5">
+            <button onclick="iniciarEdicion(${idx})" class="text-slate-500 hover:text-indigo-600 p-1.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
               </svg>
             </button>
-            <button onclick="eliminarItem(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5">
+            <button onclick="eliminarItem(${idx})" class="text-slate-500 hover:text-rose-600 p-1.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
               </svg>
@@ -602,7 +636,7 @@
       const campoTipo = document.getElementById(`edit-tipo-${idx}`);
       const nuevoSerial = limpiarSerial(campoSerial ? campoSerial.value : item.serial);
       const nuevaObs = campoObs ? campoObs.value : item.observacion;
-      const nuevoTipo = campoTipo ? campoTipo.value : item.tipo;
+      const nuevoTipo = campoTipo ? campoTipo.value : item.tipoActivo;
 
       if (!nuevoSerial) {
         showToast("El serial no puede quedar vacío", "warn", 2200);
@@ -616,10 +650,10 @@
         return;
       }
 
-      const cambioAlgo = item.serial !== nuevoSerial || (item.observacion || '') !== (nuevaObs || '') || (item.tipo || '') !== (nuevoTipo || '');
+      const cambioAlgo = item.serial !== nuevoSerial || (item.observacion || '') !== (nuevaObs || '') || (item.tipoActivo || '') !== (nuevoTipo || '');
       item.serial = nuevoSerial;
       item.observacion = nuevaObs;
-      item.tipo = nuevoTipo;
+      item.tipoActivo = nuevoTipo;
       // El ID no cambia: al re-sincronizar, el Web App de Apps Script hace un
       // UPSERT por ID, así que esta edición sobrescribirá la misma fila en
       // Sheets en vez de crear una nueva. Por eso, si cambió algo, se marca
@@ -650,17 +684,17 @@
 
       if (!url) {
         badge.innerText = 'Sin configurar';
-        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-500';
         return;
       }
 
       const pendientes = getDatos().filter(i => !i.synced).length;
       if (pendientes === 0) {
         badge.innerText = 'Todo sincronizado';
-        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-400';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-500/40 text-emerald-600';
       } else {
         badge.innerText = `${pendientes} pendiente(s)`;
-        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950 border border-amber-500/40 text-amber-400';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 border border-amber-500/40 text-amber-600';
       }
     }
 
@@ -690,7 +724,7 @@
         const payload = {
           action: 'sync',
           items: pendientes.map(i => ({
-            id: i.id, serial: i.serial, tipo: i.tipo || '', observacion: i.observacion || '', fecha: i.fecha
+            id: i.id, serial: i.serial, tipo: i.tipoActivo || '', observacion: i.observacion || '', fecha: i.fecha
           }))
         };
 
@@ -764,12 +798,11 @@
       }
 
       const obs = document.getElementById('obs-input').value;
-      const tipoSelect = document.getElementById('tipo-select');
-      const tipo = tipoSelect ? tipoSelect.value : '';
+      const tipoActivo = document.getElementById('tipo-activo-input').value;
       const d = new Date();
       const fecha = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      items.unshift({ id: generarId(), serial: limpio, tipo: tipo, observacion: obs, fecha: fecha, synced: false });
+      items.unshift({ id: generarId(), serial: limpio, tipoActivo: tipoActivo, observacion: obs, fecha: fecha, synced: false });
       guardarDatos(items);
 
       if (!silencio) {
@@ -793,8 +826,8 @@
         return;
       }
 
-      const lineas = items.map(i => `${i.tipo || ''}\t${i.serial}\t${i.observacion || ''}\t${i.fecha}`);
-      const tsvContent = `Elementos\tSerial\tObservación\tFecha\n` + lineas.join('\n');
+      const lineas = items.map(i => `${i.serial}\t${i.observacion || ''}\t${i.fecha}`);
+      const tsvContent = `Serial\tObservación\tFecha\n` + lineas.join('\n');
 
       try {
         await navigator.clipboard.writeText(tsvContent);
@@ -867,7 +900,7 @@
         console.error("Error cámara:", err);
         laserLine.classList.add('hidden');
         btnPermiso.classList.remove('hidden');
-        msgEl.innerHTML = `<span class="text-amber-400 font-bold block mb-1">Permiso denegado o no disponible</span>Toca el botón para conceder permiso.`;
+        msgEl.innerHTML = `<span class="text-amber-600 font-bold block mb-1">Permiso denegado o no disponible</span>Toca el botón para conceder permiso.`;
       }
     }
 
@@ -896,8 +929,8 @@
     function aplicarZoom(factor) {
       if (!html5QrCode) return;
       html5QrCode.applyVideoConstraints({ advanced: [{ zoom: factor }] }).then(() => {
-        document.getElementById('btn-zoom-1').className = factor === 1 ? "bg-indigo-600 text-white text-xs font-mono font-bold px-2 py-0.5 rounded" : "bg-slate-800 text-slate-300 hover:text-white text-xs font-mono font-bold px-2 py-0.5 rounded";
-        document.getElementById('btn-zoom-2').className = factor === 2 ? "bg-indigo-600 text-white text-xs font-mono font-bold px-2 py-0.5 rounded" : "bg-slate-800 text-slate-300 hover:text-white text-xs font-mono font-bold px-2 py-0.5 rounded";
+        document.getElementById('btn-zoom-1').className = factor === 1 ? "bg-indigo-600 text-white text-xs font-mono font-bold px-2 py-0.5 rounded" : "bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-mono font-bold px-2 py-0.5 rounded";
+        document.getElementById('btn-zoom-2').className = factor === 2 ? "bg-indigo-600 text-white text-xs font-mono font-bold px-2 py-0.5 rounded" : "bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-mono font-bold px-2 py-0.5 rounded";
       }).catch(() => {});
     }
 
@@ -1879,13 +1912,13 @@
       else btnConfirmar.setAttribute('disabled', 'true');
 
       container.innerHTML = codigosDetectados.map((it) => `
-        <div onclick="toggleSelectCodigo(${it.id})" class="p-2 rounded-lg border ${it.selected ? 'bg-emerald-950/40 border-emerald-500/60' : 'bg-slate-950 border-slate-800'} flex items-center justify-between cursor-pointer transition-colors">
+        <div onclick="toggleSelectCodigo(${it.id})" class="p-2 rounded-lg border ${it.selected ? 'bg-emerald-100/40 border-emerald-500/60' : 'bg-slate-50 border-slate-200'} flex items-center justify-between cursor-pointer transition-colors">
           <div class="flex items-center gap-2 overflow-hidden mr-2">
-            <input type="checkbox" ${it.selected ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-600 bg-slate-900 border-slate-700 pointer-events-none">
-            <span class="font-mono font-bold text-xs ${it.selected ? 'text-emerald-400' : 'text-slate-500'}">${it.serial}</span>
-            <span class="text-[9px] uppercase px-1 rounded bg-slate-800 text-slate-400">${it.format || '1D'}</span>
+            <input type="checkbox" ${it.selected ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-600 bg-white border-slate-300 pointer-events-none">
+            <span class="font-mono font-bold text-xs ${it.selected ? 'text-emerald-600' : 'text-slate-500'}">${it.serial}</span>
+            <span class="text-[9px] uppercase px-1 rounded bg-slate-100 text-slate-500">${it.format || '1D'}</span>
           </div>
-          <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${it.selected ? 'bg-emerald-900 text-emerald-300' : 'bg-slate-800 text-slate-500'}">
+          <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${it.selected ? 'bg-emerald-900 text-emerald-300' : 'bg-slate-100 text-slate-500'}">
             ${it.selected ? 'Incluir' : 'Omitir'}
           </span>
         </div>
@@ -1966,6 +1999,219 @@
     }
 
     // =========================================================================
+    // --- INVENTARIO COMPLETO / ADMINISTRADOR (login, listar, prestar, devolver) ---
+    // =========================================================================
+
+    function getSheetsUrl() {
+      return localStorage.getItem(SHEETS_URL_KEY) || DEFAULT_SHEETS_URL;
+    }
+
+    function restaurarSesionAdmin() {
+      const sesion = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      if (sesion) {
+        document.getElementById('inventory-login-card').classList.add('hidden');
+        document.getElementById('inventory-content').classList.remove('hidden');
+        document.getElementById('admin-user-label').innerText = sesion;
+      }
+    }
+
+    async function loginAdmin() {
+      const usuario = document.getElementById('admin-user-input').value.trim();
+      const password = document.getElementById('admin-pass-input').value;
+      const errEl = document.getElementById('admin-login-error');
+      errEl.classList.add('hidden');
+
+      if (!usuario || !password) {
+        errEl.innerText = 'Usuario y contraseña son obligatorios.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      const btn = document.getElementById('btn-admin-login');
+      btn.disabled = true;
+      btn.innerText = 'Verificando...';
+
+      try {
+        const resp = await fetch(getSheetsUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'login', usuario, password })
+        });
+        const data = await resp.json();
+
+        if (data.ok) {
+          sessionStorage.setItem(ADMIN_SESSION_KEY, data.usuario || usuario);
+          document.getElementById('admin-pass-input').value = '';
+          document.getElementById('inventory-login-card').classList.add('hidden');
+          document.getElementById('inventory-content').classList.remove('hidden');
+          document.getElementById('admin-user-label').innerText = data.usuario || usuario;
+          cargarInventarioCompleto();
+        } else {
+          errEl.innerText = data.error || 'Usuario o contraseña incorrectos.';
+          errEl.classList.remove('hidden');
+        }
+      } catch (err) {
+        errEl.innerText = 'No se pudo conectar con Google Sheets. Revisa tu conexión.';
+        errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '🔐 Ingresar';
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      inventarioCompleto = [];
+      document.getElementById('inventory-content').classList.add('hidden');
+      document.getElementById('inventory-login-card').classList.remove('hidden');
+      document.getElementById('admin-user-input').value = '';
+    }
+
+    async function cargarInventarioCompleto() {
+      const statusEl = document.getElementById('inventory-status-text');
+      statusEl.innerText = 'Cargando inventario...';
+      try {
+        const resp = await fetch(`${getSheetsUrl()}?action=list`);
+        const data = await resp.json();
+        if (data.ok) {
+          inventarioCompleto = data.items || [];
+          statusEl.innerText = `${inventarioCompleto.length} activo(s) cargado(s).`;
+          renderizarInventarioCompleto();
+        } else {
+          statusEl.innerText = 'Error al cargar: ' + (data.error || 'desconocido');
+        }
+      } catch (err) {
+        statusEl.innerText = 'No se pudo conectar con Google Sheets.';
+      }
+    }
+
+    function renderizarInventarioCompleto() {
+      const cont = document.getElementById('inventory-list-container');
+      const filtro = (document.getElementById('inventory-search-input').value || '').toLowerCase().trim();
+
+      const items = inventarioCompleto.filter(it => {
+        if (!filtro) return true;
+        return [it.elementos, it.marca, it.serial, it.placa, it.estadoPrestamo, it.nombreFuncionario, it.cedulaFuncionario]
+          .some(v => String(v || '').toLowerCase().includes(filtro));
+      });
+
+      if (items.length === 0) {
+        cont.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">Sin activos para mostrar.</p>`;
+        return;
+      }
+
+      cont.innerHTML = items.map(it => {
+        const prestado = String(it.estadoPrestamo || '').toLowerCase() === 'prestado';
+        return `
+        <div class="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm">
+          <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <p class="font-mono font-bold text-slate-800 text-sm truncate">${it.serial || '(sin serial)'}</p>
+              ${it.elementos ? `<span class="inline-block text-[10px] font-bold bg-indigo-100 border border-indigo-500/40 text-indigo-700 px-1.5 py-0.5 rounded mt-0.5">${it.elementos}</span>` : ''}
+              ${it.placa ? `<p class="text-[11px] text-slate-500 mt-0.5">Placa: ${it.placa}</p>` : ''}
+            </div>
+            <span class="shrink-0 text-[10px] font-bold px-2 py-1 rounded-full ${prestado ? 'bg-amber-100 text-amber-700 border border-amber-500/40' : 'bg-emerald-100 text-emerald-700 border border-emerald-500/40'}">
+              ${prestado ? 'Prestado' : 'Disponible'}
+            </span>
+          </div>
+
+          ${prestado ? `
+            <div class="mt-2 text-[11px] text-slate-600 bg-slate-50 border border-slate-200 rounded-lg p-2 space-y-0.5">
+              <p><b class="text-slate-700">Funcionario:</b> ${it.nombreFuncionario || '-'}</p>
+              <p><b class="text-slate-700">Cédula:</b> ${it.cedulaFuncionario || '-'}</p>
+              <p><b class="text-slate-700">Cargo:</b> ${it.cargo || '-'}</p>
+              ${it.correoFuncionario ? `<p><b class="text-slate-700">Correo:</b> ${it.correoFuncionario}</p>` : ''}
+            </div>
+            <button onclick="devolverActivoUI('${it.id}')" class="mt-2 w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-1.5 rounded-lg text-[11px] transition-all">
+              ↩ Marcar como devuelto
+            </button>
+          ` : `
+            <button onclick="abrirModalAsignar('${it.id}', '${(it.serial || '').replace(/'/g, "\\'")}')" class="mt-2 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 rounded-lg text-[11px] transition-all">
+              👤 Asignar
+            </button>
+          `}
+        </div>`;
+      }).join('');
+    }
+
+    function abrirModalAsignar(id, serial) {
+      idActivoEnAsignacion = id;
+      document.getElementById('asignar-serial-label').innerText = serial ? `Serial: ${serial}` : '';
+      document.getElementById('asignar-nombre-input').value = '';
+      document.getElementById('asignar-identificacion-input').value = '';
+      document.getElementById('asignar-rol-input').value = '';
+      document.getElementById('asignar-correo-input').value = '';
+      document.getElementById('modal-asignar').classList.remove('hidden');
+    }
+
+    function cerrarModalAsignar() {
+      idActivoEnAsignacion = null;
+      document.getElementById('modal-asignar').classList.add('hidden');
+    }
+
+    async function confirmarAsignacion() {
+      const nombreFuncionario = document.getElementById('asignar-nombre-input').value.trim();
+      const cedulaFuncionario = document.getElementById('asignar-identificacion-input').value.trim();
+      const cargo = document.getElementById('asignar-rol-input').value.trim();
+      const correoFuncionario = document.getElementById('asignar-correo-input').value.trim();
+
+      if (!nombreFuncionario || !cedulaFuncionario) {
+        showToast('Nombre e identificación son obligatorios', 'warning');
+        return;
+      }
+
+      const adminUser = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      const btn = document.getElementById('btn-confirmar-asignacion');
+      btn.disabled = true;
+      btn.innerText = 'Asignando...';
+
+      try {
+        const resp = await fetch(getSheetsUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'prestar', adminUser, id: idActivoEnAsignacion,
+            nombreFuncionario, cedulaFuncionario, cargo, correoFuncionario
+          })
+        });
+        const data = await resp.json();
+        if (data.ok) {
+          showToast('Activo asignado correctamente', 'success');
+          cerrarModalAsignar();
+          cargarInventarioCompleto();
+        } else {
+          showToast(data.error || 'No se pudo asignar', 'warning');
+        }
+      } catch (err) {
+        showToast('Error de conexión con Sheets', 'warning');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '✓ Asignar';
+      }
+    }
+
+    async function devolverActivoUI(id) {
+      if (!confirm('¿Confirmas que este activo fue devuelto y debe quedar libre?')) return;
+      const adminUser = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      try {
+        const resp = await fetch(getSheetsUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'devolver', adminUser, id })
+        });
+        const data = await resp.json();
+        if (data.ok) {
+          showToast('Activo devuelto, ahora está libre', 'success');
+          cargarInventarioCompleto();
+        } else {
+          showToast(data.error || 'No se pudo devolver', 'warning');
+        }
+      } catch (err) {
+        showToast('Error de conexión con Sheets', 'warning');
+      }
+    }
+
+    // =========================================================================
     // --- NAVEGACIÓN DE PESTAÑAS ---
     // =========================================================================
 
@@ -1974,7 +2220,7 @@
       box.innerHTML = '';
       const t = document.createElement('div');
       t.className = `toast-anim px-4 py-2 rounded-xl text-xs font-bold shadow-2xl border ${
-        type === 'success' ? 'bg-slate-900 border-emerald-500/80 text-emerald-400' : 'bg-slate-900 border-amber-500/80 text-amber-400'
+        type === 'success' ? 'bg-white border-emerald-500/80 text-emerald-600' : 'bg-white border-amber-500/80 text-amber-600'
       }`;
       t.innerText = msg;
       box.appendChild(t);
@@ -1987,273 +2233,57 @@
       const pScan = document.getElementById('panel-scan');
       const pPhoto = document.getElementById('panel-photo');
       const pList = document.getElementById('panel-list');
-      const pInventario = document.getElementById('panel-inventario');
+      const pInventory = document.getElementById('panel-inventory');
       const bScan = document.getElementById('btn-nav-scan');
       const bPhoto = document.getElementById('btn-nav-photo');
       const bList = document.getElementById('btn-nav-list');
-      const bInventario = document.getElementById('btn-nav-inventario');
+      const bInventory = document.getElementById('btn-nav-inventory');
       const modeDesc = document.getElementById('header-mode-desc');
       const laserLine = document.getElementById('laser-line');
 
       pScan.classList.add('hidden');
       pPhoto.classList.add('hidden');
       pList.classList.add('hidden');
-      pInventario.classList.add('hidden');
+      pInventory.classList.add('hidden');
+      camWrapper.classList.add('hidden');
+      laserLine.classList.add('hidden');
 
-      bScan.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
-      bPhoto.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
-      bList.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
-      bInventario.className = 'flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-200 text-xs';
+      const inactiveCls = 'flex-1 flex flex-col items-center py-1 text-slate-500 hover:text-slate-700 text-xs';
+      const activeCls = 'flex-1 flex flex-col items-center py-1 text-indigo-600 font-bold text-xs';
+      bScan.className = inactiveCls;
+      bPhoto.className = inactiveCls;
+      bList.className = inactiveCls;
+      bInventory.className = inactiveCls;
 
       if (tab === 'scan') {
         camWrapper.classList.remove('hidden');
         pScan.classList.remove('hidden');
-        bScan.className = 'flex-1 flex flex-col items-center py-1 text-indigo-400 font-bold text-xs';
+        bScan.className = activeCls;
         modeDesc.innerText = "Modo Continuo (Code 128/39)";
         laserLine.classList.remove('hidden');
       } else if (tab === 'photo') {
         camWrapper.classList.remove('hidden');
         pPhoto.classList.remove('hidden');
-        bPhoto.className = 'flex-1 flex flex-col items-center py-1 text-indigo-400 font-bold text-xs';
+        bPhoto.className = activeCls;
         modeDesc.innerText = "Foto Lote (Multi-Scan 128/39)";
-        laserLine.classList.add('hidden');
-      } else if (tab === 'inventario') {
-        camWrapper.classList.add('hidden');
-        pInventario.classList.remove('hidden');
-        bInventario.className = 'flex-1 flex flex-col items-center py-1 text-indigo-400 font-bold text-xs';
-        modeDesc.innerText = "Inventario Completo";
-        laserLine.classList.add('hidden');
-        checkAdminSession();
+      } else if (tab === 'inventory') {
+        pInventory.classList.remove('hidden');
+        bInventory.className = activeCls;
+        modeDesc.innerText = "Inventario Completo (Admin)";
       } else {
-        camWrapper.classList.add('hidden');
         pList.classList.remove('hidden');
-        bList.className = 'flex-1 flex flex-col items-center py-1 text-indigo-400 font-bold text-xs';
+        bList.className = activeCls;
         modeDesc.innerText = "Seriales Guardados";
-        laserLine.classList.add('hidden');
       }
     }
 
-    // =========================================================================
-    // --- INVENTARIO COMPLETO: LOGIN ADMIN + PRESTAR / DEVOLVER ---
-    // =========================================================================
-
-    const ADMIN_SESSION_KEY = 'inv_admin_user';
-    let inventarioCompleto = [];   // caché en memoria de la última carga desde Sheets
-    let filaPrestamoAbierta = null; // id del activo con el mini-formulario de préstamo abierto
-
-    function getSheetsUrlActual() {
-      return (localStorage.getItem(SHEETS_URL_KEY) || DEFAULT_SHEETS_URL || '').trim();
-    }
-
-    function checkAdminSession() {
-      const usuario = sessionStorage.getItem(ADMIN_SESSION_KEY);
-      const loginCard = document.getElementById('inv-login-card');
-      const adminPanel = document.getElementById('inv-admin-panel');
-      if (usuario) {
-        loginCard.classList.add('hidden');
-        adminPanel.classList.remove('hidden');
-        document.getElementById('inv-admin-user').innerText = usuario;
-        cargarInventarioCompleto();
-      } else {
-        loginCard.classList.remove('hidden');
-        adminPanel.classList.add('hidden');
-      }
-    }
-
-    async function loginAdmin() {
-      const usuario = document.getElementById('inv-login-usuario').value.trim();
-      const password = document.getElementById('inv-login-password').value;
-      const errorBox = document.getElementById('inv-login-error');
-      errorBox.classList.add('hidden');
-
-      const url = getSheetsUrlActual();
-      if (!url) {
-        errorBox.innerText = 'Primero configura la URL del Web App en la pestaña Lista.';
-        errorBox.classList.remove('hidden');
-        return;
-      }
-      if (!usuario || !password) {
-        errorBox.innerText = 'Ingresa usuario y contraseña.';
-        errorBox.classList.remove('hidden');
-        return;
-      }
-
-      const btn = document.getElementById('btn-inv-login');
-      const original = btn.innerText;
-      btn.disabled = true;
-      btn.innerText = 'Verificando...';
-
-      try {
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'login', usuario, password })
-        });
-        const data = await resp.json();
-        if (!data || data.ok !== true) throw new Error((data && data.error) || 'Credenciales inválidas');
-
-        sessionStorage.setItem(ADMIN_SESSION_KEY, data.usuario || usuario);
-        document.getElementById('inv-login-password').value = '';
-        checkAdminSession();
-      } catch (err) {
-        errorBox.innerText = err.message;
-        errorBox.classList.remove('hidden');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = original;
-      }
-    }
-
-    function logoutAdmin() {
-      sessionStorage.removeItem(ADMIN_SESSION_KEY);
-      filaPrestamoAbierta = null;
-      checkAdminSession();
-    }
-
-    async function cargarInventarioCompleto() {
-      const url = getSheetsUrlActual();
-      const container = document.getElementById('inv-items-container');
-      if (!url) {
-        container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">Configura la URL del Web App en la pestaña Lista.</p>';
-        return;
-      }
-      container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">Cargando inventario...</p>';
-      try {
-        const resp = await fetch(`${url}?action=list`);
-        const data = await resp.json();
-        if (!data || data.ok !== true) throw new Error((data && data.error) || 'No se pudo cargar el inventario');
-        inventarioCompleto = data.items || [];
-        renderInventarioLista(document.getElementById('inv-filtro-input').value);
-      } catch (err) {
-        container.innerHTML = `<p class="text-xs text-rose-400 text-center py-6">Error al cargar: ${err.message}</p>`;
-      }
-    }
-
-    function renderInventarioLista(filtro = '') {
-      const container = document.getElementById('inv-items-container');
-      const f = (filtro || '').toLowerCase().trim();
-
-      const items = !f ? inventarioCompleto : inventarioCompleto.filter(it =>
-        [it.elementos, it.marca, it.serial, it.placa, it.nombreFuncionario].some(v => String(v || '').toLowerCase().includes(f))
-      );
-
-      if (items.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-600 text-center py-6">No hay activos para mostrar.</p>';
-        return;
-      }
-
-      container.innerHTML = items.map(it => {
-        const prestado = String(it.estadoPrestamo || '').toLowerCase() === 'prestado';
-        const badgeClase = prestado
-          ? 'bg-amber-950 border border-amber-500/40 text-amber-400'
-          : 'bg-emerald-950 border border-emerald-500/40 text-emerald-400';
-        const badgeTexto = prestado ? 'Prestado' : 'Disponible';
-        const formAbierto = filaPrestamoAbierta === it.id;
-
-        return `
-        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-xs space-y-2">
-          <div class="flex justify-between items-start gap-2">
-            <div class="overflow-hidden">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="font-bold text-slate-100">${it.elementos || '<i class="text-slate-600">Sin tipo</i>'}</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full ${badgeClase}">${badgeTexto}</span>
-              </div>
-              <p class="text-[11px] text-slate-400">
-                ${it.marca ? `Marca: ${it.marca} · ` : ''}Serial: <span class="font-mono text-emerald-400">${it.serial || '-'}</span>
-                ${it.placa ? ` · Placa: ${it.placa}` : ''}
-              </p>
-              ${it.estado ? `<p class="text-[10px] text-slate-500">Estado físico: ${it.estado}</p>` : ''}
-              ${prestado ? `<p class="text-[11px] text-slate-300 mt-1">👤 ${it.nombreFuncionario || ''} ${it.cargo ? `(${it.cargo})` : ''}${it.cedulaFuncionario ? ` · CC ${it.cedulaFuncionario}` : ''}</p>` : ''}
-            </div>
-          </div>
-
-          ${prestado ? `
-            <button onclick="devolverActivo('${it.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-1.5 rounded-lg text-[11px]">
-              ↩️ Devolver
-            </button>
-          ` : formAbierto ? `
-            <div class="bg-slate-950 border border-slate-700 rounded-lg p-2 space-y-1.5">
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Quién recibe (custodio)</p>
-              <input type="text" id="prestamo-nombre-${it.id}" placeholder="Nombre funcionario"
-                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
-              <input type="text" id="prestamo-cedula-${it.id}" placeholder="Cédula funcionario"
-                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
-              <input type="text" id="prestamo-cargo-${it.id}" placeholder="Cargo"
-                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
-              <div class="flex gap-2 pt-0.5">
-                <button onclick="confirmarPrestamo('${it.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-[11px]">
-                  ✓ Confirmar préstamo
-                </button>
-                <button onclick="filaPrestamoAbierta=null; renderInventarioLista(document.getElementById('inv-filtro-input').value)" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-1.5 rounded-lg text-[11px]">
-                  ✕ Cancelar
-                </button>
-              </div>
-            </div>
-          ` : `
-            <button onclick="filaPrestamoAbierta='${it.id}'; renderInventarioLista(document.getElementById('inv-filtro-input').value)" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1.5 rounded-lg text-[11px]">
-              📤 Prestar
-            </button>
-          `}
-        </div>
-      `;
-      }).join('');
-    }
-
-    async function confirmarPrestamo(id) {
-      const nombreFuncionario = document.getElementById(`prestamo-nombre-${id}`).value.trim();
-      const cedulaFuncionario = document.getElementById(`prestamo-cedula-${id}`).value.trim();
-      const cargo = document.getElementById(`prestamo-cargo-${id}`).value.trim();
-
-      if (!nombreFuncionario || !cedulaFuncionario) {
-        showToast('Nombre y cédula del funcionario son obligatorios', 'warn', 2600);
-        return;
-      }
-
-      const url = getSheetsUrlActual();
-      const adminUser = sessionStorage.getItem(ADMIN_SESSION_KEY);
-      try {
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'prestar', adminUser, id, nombreFuncionario, cedulaFuncionario, cargo })
-        });
-        const data = await resp.json();
-        if (!data || data.ok !== true) throw new Error((data && data.error) || 'No se pudo registrar el préstamo');
-
-        filaPrestamoAbierta = null;
-        showToast('Activo prestado correctamente', 'success', 2000);
-        await cargarInventarioCompleto();
-      } catch (err) {
-        showToast(`Error: ${err.message}`, 'warn', 3200);
-      }
-    }
-
-    async function devolverActivo(id) {
-      if (!confirm('¿Confirmas la devolución de este activo?')) return;
-      const url = getSheetsUrlActual();
-      const adminUser = sessionStorage.getItem(ADMIN_SESSION_KEY);
-      try {
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'devolver', adminUser, id })
-        });
-        const data = await resp.json();
-        if (!data || data.ok !== true) throw new Error((data && data.error) || 'No se pudo registrar la devolución');
-
-        showToast('Activo devuelto correctamente', 'success', 2000);
-        await cargarInventarioCompleto();
-      } catch (err) {
-        showToast(`Error: ${err.message}`, 'warn', 3200);
-      }
-    }
 
     document.getElementById('obs-input').addEventListener('input', e => {
       localStorage.setItem('inv_html_obs', e.target.value);
     });
 
-    document.getElementById('tipo-select').addEventListener('change', e => {
-      localStorage.setItem('inv_html_tipo', e.target.value);
+    document.getElementById('tipo-activo-input').addEventListener('change', e => {
+      localStorage.setItem(TIPO_ACTIVO_KEY, e.target.value);
     });
 
     document.getElementById('sheets-url-input').addEventListener('change', e => {
@@ -2265,8 +2295,10 @@
       const savedObs = localStorage.getItem('inv_html_obs');
       if (savedObs) document.getElementById('obs-input').value = savedObs;
 
-      const savedTipo = localStorage.getItem('inv_html_tipo');
-      if (savedTipo) document.getElementById('tipo-select').value = savedTipo;
+      const savedTipo = localStorage.getItem(TIPO_ACTIVO_KEY);
+      if (savedTipo) document.getElementById('tipo-activo-input').value = savedTipo;
+
+      restaurarSesionAdmin();
 
       // Si el usuario ya guardó/cambió una URL antes, esa manda. Si no,
       // se usa la URL del Web App por defecto (ya embebida en el HTML) y se
